@@ -1,18 +1,25 @@
+import { isBefore } from 'date-fns';
 class Project {
     constructor(id, name) {
-        this.id = id; // Unique identifier for the project
-        this.name = name; // Name of the project
-        this.todos = []; // Array to hold TodoItem objects
+        this.id = id;
+        this.name = name;
+        this.todos = [];
+        this.status = 'active'; 
     }
-
     // Method to add a new TodoItem to the project
     addTodo(todoItem) {
+        if (!(todoItem instanceof TodoItem)) {
+            throw new TypeError('Expected todoItem to be an instance of TodoItem');
+        }
         this.todos.push(todoItem);
     }
-
     // Method to remove a TodoItem from the project by its id
     removeTodoById(todoId) {
-        this.todos = this.todos.filter(todo => todo.id !== todoId);
+        const index = this.todos.findIndex(todo => todo.id === todoId);
+        if (index === -1) {
+            throw new Error('TodoItem not found');
+        }
+        this.todos.splice(index, 1);
     }
 
     // Method to find a TodoItem in the project by its id
@@ -27,7 +34,10 @@ class Project {
 
     // Optional: Method to update the project name
     updateName(newName) {
-        this.name = newName;
+        if (typeof newName !== 'string' || !newName.trim()) {
+            throw new Error('Invalid name provided');
+        }
+        this.name = newName.trim();
     }
 
     // Optional: Method to get all TodoItems due before a specific date
@@ -42,6 +52,38 @@ class Project {
             name: this.name,
             todos: this.todos.map(todo => todo.toJSON()), // Serialize each TodoItem
         };
+    }
+    static fromJSON(json) {
+        const project = new Project(json.id, json.name);
+        json.todos.forEach(todoJson => {
+            const todo = TodoItem.fromJSON(todoJson); // Assuming TodoItem has a similar fromJSON method
+            project.addTodo(todo);
+        });
+        return project;
+    }
+    setStatus(status) {
+        const validStatuses = ['active', 'completed', 'archived'];
+        if (!validStatuses.includes(status)) {
+            throw new Error('Invalid project status');
+        }
+        this.status = status;
+    }
+
+    getStatus() {
+        return this.status;
+    }
+    sortTodosByPriority() {
+        this.todos.sort((a, b) => b.priority - a.priority);
+    }
+
+    getTodoSummary() {
+        const summary = {
+            total: this.todos.length,
+            completed: this.todos.filter(todo => todo.completed).length,
+            pending: this.todos.filter(todo => !todo.completed).length
+        };
+    
+        return summary;
     }
 }
 

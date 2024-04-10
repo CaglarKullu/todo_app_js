@@ -1,13 +1,33 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="utf-8" />
-   <title>To Do</title>
-  </head>
-  <body>
-     <!-- The root element where the app will be mounted -->
-    <div id="app"></div>
-   <script src="./index.bundle.js"></script>
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List Application</title>
+</head>
+<body>
+    <header>
+        <h1>To-Do List Application</h1>
+    </header>
+    <main>
+        <aside id="project-list">
+            <!-- ProjectView will render the list of projects here -->
+        </aside>
+        <section id="todo-list">
+            <!-- TodoListView will render the list of todos for the selected project here -->
+        </section>
+        <section id="todo-details">
+            <!-- TodoItemView will render the details of a selected todo here -->
+        </section>
+    </main>
+    <div id="modal" class="hidden">
+        <!-- UIView will use this modal for adding/editing projects and todos -->
+        <div class="modal-content">
+            <span class="close-button">×</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="./index.bundle.js"></script> <!-- Adjust the path as needed -->
+</body>
 </html>

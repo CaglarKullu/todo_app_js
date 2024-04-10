@@ -1,5 +1,111 @@
+/* Color scheme and typography */
+:root {
+    --primary-color: #5d1049; /* Deep purple for primary actions */
+    --secondary-color: #007bff; /* Blue for secondary information/links */
+    --background-color: #ffffff; /* White background */
+    --text-color: #333; /* Dark gray for text for readability */
+    --todo-bg-color: #f9f9f9; /* Lighter background for todo items */
+    --border-color: #ddd; /* Light gray for borders */
+    --font-stack: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-size-normal: 16px;
+    --font-size-large: 18px;
+}
 
-body {
+/* Basic reset for padding and margin */
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-stack);
+    font-size: var(--font-size-normal);
+    color: var(--text-color);
+    background-color: var(--background-color);
+    line-height: 1.6;
+    padding: 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+/* Links */
+a {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+a:hover,
+a:focus {
+    text-decoration: underline;
+}
+
+/* Buttons */
+button {
+    font-size: var(--font-size-normal);
+    color: #fff;
+    background-color: var(--primary-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: darken(var(--primary-color), 10%);
+}
+
+/* Form elements */
+input[type="text"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+}
+
+/* Utility Classes for Spacing */
+.mt-1 { margin-top: 1rem; }
+.mb-1 { margin-bottom: 1rem; }
+.pt-1 { padding-top: 1rem; }
+.pb-1 { padding-bottom: 1rem; }
+
+/* Layout & Grid */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* To-do specific styles */
+.todo-item {
+    background-color: var(--todo-bg-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.todo-item:last-child {
+    margin-bottom: 0;
+}
+
+.todo-title {
+    font-size: var(--font-size-large);
+}
+
+/* Interactive States */
+.todo-item:hover {
+    background-color: darken(var(--todo-bg-color), 5%);
 }

@@ -1,30 +1,37 @@
+import './todoListView.css';
 class TodoListView {
     constructor(rootElement) {
         this.rootElement = rootElement;
     }
 
-    render(todos, onTodoSelect, onTodoDelete) {
-        this.rootElement.innerHTML = '';
+    render(todoItems, onTodoSelect, onTodoComplete, onTodoDelete) {
+        this.rootElement.innerHTML = ''; // Clear the list before re-rendering
 
-        todos.forEach(todo => {
-            const todoElement = document.createElement('div');
-            todoElement.textContent = `${todo.title} - Due: ${todo.dueDate}`;
-            todoElement.classList.add('todo-item');
+        const listElement = document.createElement('ul');
+        listElement.className = 'todo-list';
 
-            // Event listener for selecting a todo to view/edit
-            todoElement.addEventListener('click', () => onTodoSelect(todo.id));
+        todoItems.forEach(todoItem => {
+            const itemElement = document.createElement('li');
+            itemElement.className = 'todo-item';
+            itemElement.innerHTML = `
+                <span class="todo-title ${todoItem.completed ? 'todo-completed' : ''}" data-id="${todoItem.id}">${todoItem.title}</span>
+                <span class="todo-due-date">${todoItem.dueDate}</span>
+                <button class="toggle-complete-btn" data-id="${todoItem.id}">✓</button>
+                <button class="delete-todo-btn" data-id="${todoItem.id}">🗑</button>
+            `;
 
-            // Delete button
-            const deleteBtn = document.createElement('button');
-            deleteBtn.textContent = 'Delete';
-            deleteBtn.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent triggering the click on the todoElement
-                onTodoDelete(todo.id);
+            // Event listeners for actions
+            itemElement.querySelector('.todo-title').addEventListener('click', () => onTodoSelect(todoItem.id));
+            itemElement.querySelector('.toggle-complete-btn').addEventListener('click', () => onTodoComplete(todoItem.id));
+            itemElement.querySelector('.delete-todo-btn').addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent triggering the select action
+                onTodoDelete(todoItem.id);
             });
 
-            todoElement.appendChild(deleteBtn);
-            this.rootElement.appendChild(todoElement);
+            listElement.appendChild(itemElement);
         });
+
+        this.rootElement.appendChild(listElement);
     }
 }
 
