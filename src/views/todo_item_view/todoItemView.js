@@ -18,7 +18,7 @@ class TodoItemView {
                 </div>
                 <div>
                     <label>Due Date:</label>
-                    <input type="date" value="${todoItem.dueDate}" class="todo-due-date-edit" />
+                    <input type="date" value="${formattedDueDate}" class="todo-due-date-edit" />
                 </div>
                 <div>
                     <label>Priority:</label>
@@ -33,10 +33,15 @@ class TodoItemView {
                 <button class="delete-todo-btn">Delete</button>
             </div>
         `;
-
-        this.rootElement.querySelector('.save-todo-btn').addEventListener('click', () => onSave(this.collectTodoData()));
-        this.rootElement.querySelector('.cancel-todo-btn').addEventListener('click', onCancel);
-        this.rootElement.querySelector('.delete-todo-btn').addEventListener('click', () => onDelete(todoItem.id));
+        this.rootElement.addEventListener('click', event => {
+            if (event.target.matches('.save-todo-btn')) {
+                onSave(this.collectTodoData());
+            } else if (event.target.matches('.cancel-todo-btn')) {
+                onCancel();
+            } else if (event.target.matches('.delete-todo-btn')) {
+                onDelete(todoItem.id);
+            }
+        });
     }
 
     // Collect data from the form fields
@@ -45,9 +50,20 @@ class TodoItemView {
             title: this.rootElement.querySelector('.todo-title-edit').value,
             description: this.rootElement.querySelector('.todo-desc-edit').value,
             dueDate: this.rootElement.querySelector('.todo-due-date-edit').value,
-            priority: [this.rootElement.querySelector('.todo-priority-edit').selectedIndex + 1, this.rootElement.querySelector('.todo-priority-edit').value]
+            priority: this.rootElement.querySelector('.todo-priority-edit').value
         };
     }
+
+    // Clear the form fields
+
+    clearTodoData() {
+        this.rootElement.querySelector('.todo-title-edit').value = '';
+        this.rootElement.querySelector('.todo-desc-edit').value = '';
+        this.rootElement.querySelector('.todo-due-date-edit').value = '';
+        this.rootElement.querySelector('.todo-priority-edit').value = '';
+    }
+
+    
 }
 
 export default TodoItemView;

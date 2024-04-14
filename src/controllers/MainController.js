@@ -6,18 +6,37 @@ class MainController {
         this.todoListView = todoListView;
         this.todoItemView = todoItemView;
         this.uiView = uiView;
-
+        this.selectTodo = this.selectTodo.bind(this);
         // Initial rendering
+        this.init();
         this.refreshProjects();
         this.refreshTodos();
+    }
 
-        // Example setup for UI interactions
-        // Assume addButton is your UI element for adding projects
-        document.getElementById('add-project-btn').addEventListener('click', () => {
-            this.uiView.showModal('Add Project', (projectName) => {
-                this.addProject(projectName);
-            });
-        });
+    init() {
+        // Wait until the call stack is clear to ensure all synchronous rendering tasks are complete
+        setTimeout(() => {
+            const addButton = document.getElementById('add-project-btn');
+            if (addButton) {
+                addButton.addEventListener('click', () => {
+                    this.uiView.showModal(this.getAddProjectModalContent(), (projectName) => {
+                        this.addProject(projectName);
+                    });
+                });
+            } else {
+                console.error("Add Project button not found!");
+            }
+        }, 0);
+    }
+    getAddProjectModalContent() {
+        // Return the HTML content for the modal to add a new project
+        return `
+            <div>
+                <input type="text" id="project-name-input" placeholder="Enter Project Name">
+                <button id="submit-btn">Add Project</button>
+                <button id="close-modal-btn">Close</button>
+            </div>
+        `;
     }
     
     refreshProjects() {
@@ -31,20 +50,27 @@ class MainController {
 
     refreshTodos() {
         const currentProjectId = this.projectModel.getCurrentProjectId();
+        const todos = this.todoModel.getTodosByProjectId(currentProjectId);
         this.todoListView.render(
-            this.todoModel.getTodosByProjectId(currentProjectId), 
-            this.selectTodo.bind(this), 
-            this.toggleTodoCompletion.bind(this), 
+            todos,
+            this.selectTodo.bind(this),
+            this.toggleTodoCompletion.bind(this),
             this.deleteTodo.bind(this)
         );
     }
 
     // Method to handle adding a new project
-addProject(projectName) {
-    this.projectModel.addProject(projectName);
-    this.refreshProjects();
-}
-
+    addProject(projectName) {
+        if (projectName.trim() !== '') {
+            this.projectModel.addProject(projectName);
+            this.projectView.render(
+                this.projectModel.getProjects(),
+                this.projectModel.getCurrentProjectId()
+            );
+        } else {
+            console.log('Project name cannot be empty.');
+        }
+    }
 // Method to select a project and refresh the todo list
 selectProject(projectId) {
     this.projectModel.setCurrentProjectId(projectId);
@@ -82,6 +108,25 @@ deleteTodo(todoId) {
         this.todoModel.deleteTodo(todoId);
         this.refreshTodos();
     });
+}
+
+selectTodo(todoId) {
+    const todo = this.todoModel.findTodoById(todoId);
+    if (todo) {
+        this.todoItemView.render(todo, this.saveTodo.bind(this), this.cancelEdit.bind(this));
+    } else {
+        console.error("Todo not found!");
+    }
+}
+
+saveTodo(todoData) {
+    this.todoModel.updateTodo(todoData);
+    this.refreshTodos();
+    this.uiView.hideModal(); // Assuming modal usage
+}
+
+cancelEdit() {
+    this.uiView.hideModal(); // Assuming modal usage
 }
 
 }

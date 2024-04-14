@@ -1,60 +1,55 @@
 import './projectView.css';
+
 class ProjectView {
     constructor(rootElement, onProjectAdd, onProjectSelect, onProjectDelete) {
         this.rootElement = rootElement;
         this.onProjectAdd = onProjectAdd;
         this.onProjectSelect = onProjectSelect;
         this.onProjectDelete = onProjectDelete;
+
+        // Bind the method to ensure 'this' context is maintained
         this.renderProjects = this.renderProjects.bind(this);
     }
 
     // Call this method to initially set up the project view with an add project form and project list
     render(projects, currentProjectId) {
         this.rootElement.innerHTML = `
-            <div class="add-project">
+            <aside class="add-project">
                 <input type="text" id="new-project-name" placeholder="New Project Name" />
                 <button id="add-project-btn">Add Project</button>
-            </div>
+            </aside>
             <ul id="project-list"></ul>
         `;
 
-        document.getElementById('add-project-btn').addEventListener('click', () => {
-            const projectName = document.getElementById('new-project-name').value.trim();
-            if (projectName) {
-                this.onProjectAdd(projectName);
-            }
-        });
-
-        this.projectListElement = document.getElementById('project-list');
+        // Immediately query the DOM for the button and set up the event listener
+        this.setupEventListeners();
+        
+        // Render projects after setting up initial UI
+        this.projectListElement = this.rootElement.querySelector('#project-list');
         this.renderProjects(projects, currentProjectId);
     }
 
-    // Separated render function for projects to call on init and when projects are updated
-    renderProjects(projects, currentProjectId) {
-        this.projectListElement.innerHTML = '';
-
-        projects.forEach(project => {
-            const projectElement = document.createElement('li');
-            projectElement.textContent = project.name;
-            projectElement.className = 'project-item';
-            if (project.id === currentProjectId) projectElement.classList.add('active');
-
-            projectElement.addEventListener('click', () => this.onProjectSelect(project.id));
-
-            // Adding delete button
-            const deleteBtn = document.createElement('span');
-            deleteBtn.textContent = ' ❌';
-            deleteBtn.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent triggering the project selection
-                const confirmDeletion = confirm(`Are you sure you want to delete "${project.name}"?`);
-                if (confirmDeletion) {
-                    this.onProjectDelete(project.id);
+    setupEventListeners() {
+        const addBtn = this.rootElement.querySelector('#add-project-btn');
+        if (addBtn) {
+            addBtn.addEventListener('click', () => {
+                const projectName = this.rootElement.querySelector('#new-project-name').value.trim();
+                if (projectName) {
+                    this.onProjectAdd(projectName);
                 }
             });
+        } else {
+            console.error('The add button was not found in the DOM.');
+        }
+    }
 
-            projectElement.appendChild(deleteBtn);
-            this.projectListElement.appendChild(projectElement);
-        });
+    renderProjects(projects, currentProjectId) {
+        this.projectListElement.innerHTML = projects.map(project => `
+            <li class="project-item ${project.id === currentProjectId ? 'active' : ''}" data-project-id="${project.id}">
+                ${project.name}
+                <span class="delete-project-btn" data-project-id="${project.id}" data-project-name="${project.name}">❌</span>
+            </li>
+        `).join('');
     }
 }
 

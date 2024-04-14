@@ -1,6 +1,6 @@
 import ProjectModel from './models/projectModel';
 import TodoModel from './models/toDoModel';
-import ProjectView from './views/project_view/projectView';
+import ProjectView from './views/project_view/projectView.js';
 import TodoListView from './views/todo_list_view/todoListView';
 import TodoItemView from './views/todo_item_view/todoItemView';
 import UIView from './views/ui_view/uiView';

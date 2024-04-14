@@ -37,9 +37,9 @@ class UIView {
     }
 
     hideModal() {
-        document.getElementById('modal').classList.add('hidden');
+        const modal = document.getElementById('modal');
+        modal.style.display = 'none';
     }
-
     // Example method for showing a confirmation dialog
     showConfirmation(message, onConfirm) {
         const confirmContent = document.createElement('div');
