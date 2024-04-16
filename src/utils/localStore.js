@@ -1,5 +1,4 @@
-import { TodoItem } from '../models/Todo_Model';
-import { Project } from '../models/Project';
+import TodoItem  from '../models/Todo_Item';
 class LocalStorageHelper {
     constructor() {
         this.localStorage = window.localStorage;
