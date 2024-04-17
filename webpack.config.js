@@ -9,7 +9,6 @@ module.exports = {
   devtool: 'inline-source-map', // Useful for development, switch to a different option for production
   devServer: {
     static: './dist/',
-    hot: true,
     devMiddleware: {
         publicPath: '/dist/',
         writeToDisk: true,

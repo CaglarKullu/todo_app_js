@@ -1,28 +1,34 @@
 import TodoItem from './Todo_Item';
-import LocalStorageHelper from '../utils/localStore';
-
-
 class TodoModel {
     constructor() {
-        const localStorageHelper = new LocalStorageHelper();
-        this.localStorageHelper = localStorageHelper;
-        const todoData = JSON.parse(localStorageHelper.get('todos') || '[]');
-        const todos = todoData.map(todoData => new TodoItem(
-            todoData.id,
-            todoData.title,
-            todoData.description,
-            new Date(todoData.dueDate),
-            todoData.priority,
-            todoData.notes,
-            todoData.checklist,
-            todoData.status
-        ));
-        this.todos =todos;
-       
+        if (!TodoModel.instance) {
+            this.todos = [];
+            this.loadTodos(); 
+            TodoModel.instance = this;
+        }
+        return TodoModel.instance;
+    }
+
+    loadTodos() {
+        const storedTodos = localStorage.getItem('todos');
+        if (!storedTodos) {
+            this.todos = [];
+        } else {
+            this.todos = JSON.parse(storedTodos).map(todoData => new TodoItem({
+                id: todoData.id,
+                title: todoData.title,
+                description: todoData.description,
+                dueDate: new Date(todoData.dueDate),
+                priority: todoData.priority,
+                notes: todoData.notes,
+                checklist: todoData.checklist,
+                status: todoData.status
+            }));
+        }
     }
 
     saveTodos() {
-       this.localStorageHelper.set('todos', JSON.stringify(this.todos));
+        localStorage.setItem('todos', JSON.stringify(this.todos.map(todo => todo.toJSON())));
     }
 
     addTodo(todo) {
@@ -52,5 +58,4 @@ class TodoModel {
         this.saveTodos();
     }
 }
-
 export default TodoModel;

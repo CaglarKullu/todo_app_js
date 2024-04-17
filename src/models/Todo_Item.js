@@ -1,7 +1,7 @@
 import { format, parseISO } from 'date-fns';
 class TodoItem {
-    constructor( {title, description, dueDate, priority, notes = '', checklist = [], status = 'Not Started'}) {
-        this.id = Date.now().toString(); // A unique identifier for the todo
+    constructor( {id, title, description, dueDate, priority, notes = '', checklist = [], status = 'Not Started'}) {
+        this.id = id ||Date.now().toString(); // A unique identifier for the todo
         this.title = title; // The title of the todo
         this.description = description; // A brief description of the task
         this.dueDate = dueDate; // The date when the todo should be completed

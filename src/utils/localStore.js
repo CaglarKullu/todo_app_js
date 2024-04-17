@@ -1,7 +1,6 @@
-import TodoItem  from '../models/Todo_Item';
 class LocalStorageHelper {
     constructor() {
-        this.localStorage = window.localStorage;
+        this.localStorage = localStorage;
     }
 
     get(key) {
@@ -22,24 +21,6 @@ class LocalStorageHelper {
 
     has(key) {
         return this.localStorage.getItem(key) !== null;
-    }
-
-    saveProjects(projects) {
-        const projectsToSave = projects.map(project => project.toJSON());
-        this.set('projects', JSON.stringify(projectsToSave));
-    }
-
-    loadProjects() {
-        const projectsData = JSON.parse(this.get('projects') || '[]');
-        const projects = projectsData.map(projectData => {
-            const project = new Project(projectData.id, projectData.name);
-            project.todos = projectData.todos.map(todoData => new TodoItem(
-                todoData.id, todoData.title, todoData.description, new Date(todoData.dueDate),
-                todoData.priority, todoData.notes, todoData.checklist, todoData.status
-            ));
-            return project;
-        });
-        return projects;
     }
 }
 
