@@ -28,7 +28,7 @@ class TodoModel {
     }
 
     saveTodos() {
-        localStorage.setItem('todos', JSON.stringify(this.todos.map(todo => todo.toJSON())));
+        localStorage.setItem('todos', JSON.stringify(this.todos.map(todo => JSON.parse(JSON.stringify(todo)))));
     }
 
     addTodo(todo) {
@@ -36,7 +36,7 @@ class TodoModel {
         this.saveTodos();
     }
 
-    deleteTodo(id) {
+    deleteTodoById(id) {
         this.todos = this.todos.filter(todo => todo.id !== id);
         this.saveTodos();
     }
@@ -56,6 +56,38 @@ class TodoModel {
     clearTodos() {
         this.todos = [];
         this.saveTodos();
+    }
+    addSampleTodos() {
+        const samples = [
+            new TodoItem({
+                id: Date.now().toString(),
+                title: 'Learn JavaScript',
+                description: 'Complete the JavaScript course on interactive platforms',
+                dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),  // One week from now
+                priority: 'High',
+                notes: 'Start with ES6 features',
+                checklist: [
+                    { item: 'Watch video lectures', completed: false },
+                    { item: 'Complete hands-on exercises', completed: false }
+                ],
+                status: 'Not Started'
+            }),
+            new TodoItem({
+                id: Date.now().toString(),
+                title: 'Grocery Shopping',
+                description: 'Buy groceries for next week',
+                dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),  // Two days from now
+                priority: 'Medium',
+                notes: 'Remember to check pantry stocks',
+                checklist: [
+                    { item: 'Eggs', completed: false },
+                    { item: 'Milk', completed: false }
+                ],
+                status: 'Not Started'
+            })
+        ];
+
+        samples.forEach(sample => this.addTodo(sample));
     }
 }
 export default TodoModel;

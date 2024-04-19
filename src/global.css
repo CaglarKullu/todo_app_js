@@ -109,3 +109,4 @@ select {
 .todo-item:hover {
     background-color: darken(var(--todo-bg-color), 5%);
 }
+
