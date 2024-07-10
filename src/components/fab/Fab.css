@@ -1,0 +1,31 @@
+.fab-container {
+    position: relative;
+}
+
+.fab {
+    width: 56px;
+    height: 56px;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.fab:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Additional CSS for animation */
+.fab:active {
+    transform: scale(0.95);
+}
