@@ -11,6 +11,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const todos = todoModel.getTodos();
         const todoTileList = new TodoTileList(todos, handleUpdate, handleDelete);
         app.innerHTML = '';  // Clear previous content
+        if(todos.length === 0) {
+            const p = document.createElement('p');
+            p.textContent = 'No todos found';
+            app.appendChild(p);
+
+            const button = document.createElement('button');
+            button.textContent = 'Add Todo';
+            app.appendChild(button);
+
+            button.onclick = () => {
+                todoModel.addTodo({title: 'New Todo', description: 'New Todo Description', dueDate: new Date(), priority: 'High', notes: 'New Todo Notes', checklist: [], status: 'Not Started'});
+                render();
+            }
+        }
         app.appendChild(todoTileList.render());
     }
 

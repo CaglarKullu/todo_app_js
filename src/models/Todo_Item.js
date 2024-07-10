@@ -1,6 +1,6 @@
 import { format, parseISO } from 'date-fns';
 class TodoItem {
-    constructor( {id, title, description, dueDate, priority, notes = '', checklist = [], status = 'Not Started'}) {
+    constructor( {id, projectId, title, description, dueDate, priority, notes = '', checklist = [], status = 'Not Started'}) {
         this.id = id ||Date.now().toString(); // A unique identifier for the todo
         this.title = title; // The title of the todo
         this.description = description; // A brief description of the task
@@ -9,6 +9,7 @@ class TodoItem {
         this.notes = notes; // Additional remarks or information
         this.checklist = checklist; // Sub-tasks or steps required to complete the main task
         this.status = status; // Current state of the task, e.g., "Not Started", "In Progress", "Completed"
+        this.projectId = projectId;
     }
     // Method to get the due date in 'yyyy-MM-dd' format
     getFormattedDueDate() {
@@ -46,6 +47,7 @@ class TodoItem {
     toJSON() {
         return {
             id: this.id,
+            projectId: this.projectId,
             title: this.title,
             description: this.description,
             dueDate: this.dueDate instanceof Date ? this.dueDate.toISOString() : this.dueDate,
@@ -58,6 +60,7 @@ class TodoItem {
     deserializeTodoItem(todoData) {
         return new TodoItem(
             todoData.id,
+            todoData.projectId,
             todoData.title,
             todoData.description,
             parseISO(todoData.dueDate), // Convert ISO string back to Date

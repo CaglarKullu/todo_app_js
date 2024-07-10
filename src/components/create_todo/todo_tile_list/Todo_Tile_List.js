@@ -11,6 +11,7 @@ export default class TodoTileList {
         const listElement = document.createElement('div');
         listElement.className = 'todo-tile-list';
 
+
         this.todos.forEach(todo => {
             const todoTile = new TodoTile(todo, this.onUpdate, this.onDelete);
             listElement.appendChild(todoTile.render());
